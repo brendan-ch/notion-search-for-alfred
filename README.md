@@ -6,9 +6,9 @@ An Alfred 5 workflow to search for Notion pages in your workspace.
 
 1. [Generate an integration key](https://www.notion.so/my-integrations/) for your workspace. [See instructions on configuration below](#generating-an-integration-key).
 2. Copy the internal integration key.
-3. Grant the integration access to pages that you want to appear in search. See [Notion's help center](https://www.notion.so/help/add-and-manage-connections-with-the-api#add-connections-to-pages) for more information.
-4. Download the workflow, and double-click to install.
-5. Paste your integration key when prompted. You may also optionally choose to open links in the Notion desktop client.
+3. Grant the integration access to pages that you want to appear in search. See [this help document](https://www.notion.so/help/add-and-manage-connections-with-the-api#add-connections-to-pages) for more information.
+4. Download and install the workflow.
+5. Paste your integration key when prompted.
 6. Start searching for pages by typing `ns [search query]`. Select a search result to open it, or use `⌘+select` to copy the page link.
 
 # Generating an Integration Key
