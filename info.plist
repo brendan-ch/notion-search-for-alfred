@@ -1,0 +1,490 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>bundleid</key>
+	<string>dev.bchen.notion-search-for-alfred</string>
+	<key>category</key>
+	<string>Productivity</string>
+	<key>connections</key>
+	<dict>
+		<key>95C59501-B35E-4FE9-962E-B322BA93EF37</key>
+		<array>
+			<dict>
+				<key>destinationuid</key>
+				<string>6E3ABA97-D3A0-4E3A-B1B3-766B3E57E289</string>
+				<key>modifiers</key>
+				<integer>0</integer>
+				<key>modifiersubtext</key>
+				<string></string>
+				<key>sourceoutputuid</key>
+				<string>6C21E67D-B3E3-4C91-8D5C-A478F332E281</string>
+				<key>vitoclose</key>
+				<false/>
+			</dict>
+			<dict>
+				<key>destinationuid</key>
+				<string>AC29A547-802D-4793-BB40-D4685D63AC26</string>
+				<key>modifiers</key>
+				<integer>0</integer>
+				<key>modifiersubtext</key>
+				<string></string>
+				<key>vitoclose</key>
+				<false/>
+			</dict>
+		</array>
+		<key>C3ACA64C-07DB-4674-B00E-2C045633F20C</key>
+		<array>
+			<dict>
+				<key>destinationuid</key>
+				<string>95C59501-B35E-4FE9-962E-B322BA93EF37</string>
+				<key>modifiers</key>
+				<integer>0</integer>
+				<key>modifiersubtext</key>
+				<string></string>
+				<key>vitoclose</key>
+				<false/>
+			</dict>
+		</array>
+		<key>CC621B5E-7405-4747-8FAA-FE2A58F0A98C</key>
+		<array>
+			<dict>
+				<key>destinationuid</key>
+				<string>C3ACA64C-07DB-4674-B00E-2C045633F20C</string>
+				<key>modifiers</key>
+				<integer>0</integer>
+				<key>modifiersubtext</key>
+				<string></string>
+				<key>vitoclose</key>
+				<false/>
+			</dict>
+			<dict>
+				<key>destinationuid</key>
+				<string>E2311F96-B8CD-44A8-B863-98B20E2DE399</string>
+				<key>modifiers</key>
+				<integer>1048576</integer>
+				<key>modifiersubtext</key>
+				<string>Copy page link to clipboard</string>
+				<key>vitoclose</key>
+				<false/>
+			</dict>
+			<dict>
+				<key>destinationuid</key>
+				<string>C16C7117-4F88-4E46-BBB0-F0948EB00485</string>
+				<key>modifiers</key>
+				<integer>0</integer>
+				<key>modifiersubtext</key>
+				<string></string>
+				<key>vitoclose</key>
+				<false/>
+			</dict>
+		</array>
+	</dict>
+	<key>createdby</key>
+	<string>Brendan Chen</string>
+	<key>description</key>
+	<string>Search pages inside a Notion workspace.</string>
+	<key>disabled</key>
+	<false/>
+	<key>name</key>
+	<string>Notion Search for Alfred</string>
+	<key>objects</key>
+	<array>
+		<dict>
+			<key>config</key>
+			<dict>
+				<key>browser</key>
+				<string></string>
+				<key>skipqueryencode</key>
+				<false/>
+				<key>skipvarencode</key>
+				<false/>
+				<key>spaces</key>
+				<string></string>
+				<key>url</key>
+				<string>notion://{var:split2}</string>
+			</dict>
+			<key>type</key>
+			<string>alfred.workflow.action.openurl</string>
+			<key>uid</key>
+			<string>6E3ABA97-D3A0-4E3A-B1B3-766B3E57E289</string>
+			<key>version</key>
+			<integer>1</integer>
+		</dict>
+		<dict>
+			<key>config</key>
+			<dict>
+				<key>alfredfiltersresults</key>
+				<false/>
+				<key>alfredfiltersresultsmatchmode</key>
+				<integer>0</integer>
+				<key>argumenttreatemptyqueryasnil</key>
+				<true/>
+				<key>argumenttrimmode</key>
+				<integer>0</integer>
+				<key>argumenttype</key>
+				<integer>0</integer>
+				<key>escaping</key>
+				<integer>68</integer>
+				<key>keyword</key>
+				<string>{var:keyword}</string>
+				<key>queuedelaycustom</key>
+				<integer>3</integer>
+				<key>queuedelayimmediatelyinitially</key>
+				<false/>
+				<key>queuedelaymode</key>
+				<integer>1</integer>
+				<key>queuemode</key>
+				<integer>1</integer>
+				<key>runningsubtext</key>
+				<string>Searching...</string>
+				<key>script</key>
+				<string># FIXME improve documentation
+
+import json
+import sys
+import http.client
+import os
+
+def parse_rich_text(objects: "list") -&gt; str:
+  """Returns an array of rich text objects as plain text."""
+  toReturn = ""
+
+  for item in objects:
+    toReturn += item['plain_text']
+
+  return toReturn
+
+# Notion API parameters
+NOTION_VERSION = '2022-06-28'
+PAGE_SIZE = 10;
+
+# Get bearer token and query
+token = os.getenv('notionApiToken')
+query = sys.argv[1]
+
+# Check if token/query exists
+if not token:
+  sys.stdout.write(json.dumps({
+    'items': [
+      {
+        'title': 'Please set the notionApiToken environment variable in your workflow settings.'
+      }
+    ]
+  }))
+  exit(1)
+elif not query or len(query) == 0:
+  sys.stdout.write(json.dumps({
+    'items': [
+      {
+        'title': 'Please enter a search term.'
+      }
+    ]
+  }))
+  exit(1)
+
+conn = http.client.HTTPSConnection("api.notion.com")
+headers = {
+  'Authorization': f'Bearer {token}',
+  'Content-type': 'application/json',
+  'Notion-Version': NOTION_VERSION
+}
+
+payload = json.dumps({
+  'query': query,
+  'page_size': PAGE_SIZE
+})
+
+conn.request("POST", "/v1/search", payload, headers)
+res = conn.getresponse()
+data = res.read().decode('utf-8')
+response_json = json.loads(data)
+
+alfred_json = []
+
+# Loop through pages
+for item in response_json['results']:
+  if 'title' in item:
+    title = parse_rich_text(item['title'])
+  elif 'properties' in item and 'title' in item['properties']:
+    title = parse_rich_text(item['properties']['title']['title'])
+  elif 'properties' in item and 'Name' in item['properties']:
+    title = parse_rich_text(item['properties']['Name']['title'])
+  else:
+    continue
+
+  # Get the URL
+  result = {
+    'title': title,
+    'arg': item['url'],
+    'subtitle': item['url']
+  }
+  alfred_json.append(result)
+
+json = json.dumps({
+  'items': alfred_json
+})
+sys.stdout.write(json)
+exit(0)</string>
+				<key>scriptargtype</key>
+				<integer>1</integer>
+				<key>scriptfile</key>
+				<string>script.py</string>
+				<key>subtext</key>
+				<string>Quickly search for Notion pages in your workspace.</string>
+				<key>title</key>
+				<string>Search for Notion pages</string>
+				<key>type</key>
+				<integer>9</integer>
+				<key>withspace</key>
+				<true/>
+			</dict>
+			<key>type</key>
+			<string>alfred.workflow.input.scriptfilter</string>
+			<key>uid</key>
+			<string>CC621B5E-7405-4747-8FAA-FE2A58F0A98C</string>
+			<key>version</key>
+			<integer>3</integer>
+		</dict>
+		<dict>
+			<key>config</key>
+			<dict>
+				<key>conditions</key>
+				<array>
+					<dict>
+						<key>inputstring</key>
+						<string>{var:openInDesktop}</string>
+						<key>matchcasesensitive</key>
+						<false/>
+						<key>matchmode</key>
+						<integer>5</integer>
+						<key>matchstring</key>
+						<string></string>
+						<key>outputlabel</key>
+						<string>Open in desktop</string>
+						<key>uid</key>
+						<string>6C21E67D-B3E3-4C91-8D5C-A478F332E281</string>
+					</dict>
+				</array>
+				<key>elselabel</key>
+				<string>Open in web browser</string>
+				<key>hideelse</key>
+				<false/>
+			</dict>
+			<key>type</key>
+			<string>alfred.workflow.utility.conditional</string>
+			<key>uid</key>
+			<string>95C59501-B35E-4FE9-962E-B322BA93EF37</string>
+			<key>version</key>
+			<integer>1</integer>
+		</dict>
+		<dict>
+			<key>config</key>
+			<dict>
+				<key>delimiter</key>
+				<string>://</string>
+				<key>discardemptyarguments</key>
+				<false/>
+				<key>outputas</key>
+				<integer>0</integer>
+				<key>trimarguments</key>
+				<true/>
+				<key>variableprefix</key>
+				<string>split</string>
+			</dict>
+			<key>type</key>
+			<string>alfred.workflow.utility.split</string>
+			<key>uid</key>
+			<string>C3ACA64C-07DB-4674-B00E-2C045633F20C</string>
+			<key>version</key>
+			<integer>1</integer>
+		</dict>
+		<dict>
+			<key>config</key>
+			<dict>
+				<key>browser</key>
+				<string></string>
+				<key>skipqueryencode</key>
+				<false/>
+				<key>skipvarencode</key>
+				<false/>
+				<key>spaces</key>
+				<string></string>
+				<key>url</key>
+				<string>https://{var:split2}</string>
+			</dict>
+			<key>type</key>
+			<string>alfred.workflow.action.openurl</string>
+			<key>uid</key>
+			<string>AC29A547-802D-4793-BB40-D4685D63AC26</string>
+			<key>version</key>
+			<integer>1</integer>
+		</dict>
+		<dict>
+			<key>config</key>
+			<dict>
+				<key>autopaste</key>
+				<false/>
+				<key>clipboardtext</key>
+				<string>{query}</string>
+				<key>ignoredynamicplaceholders</key>
+				<false/>
+				<key>transient</key>
+				<false/>
+			</dict>
+			<key>type</key>
+			<string>alfred.workflow.output.clipboard</string>
+			<key>uid</key>
+			<string>E2311F96-B8CD-44A8-B863-98B20E2DE399</string>
+			<key>version</key>
+			<integer>3</integer>
+		</dict>
+		<dict>
+			<key>config</key>
+			<dict>
+				<key>argument</key>
+				<string>'{query}', {variables}</string>
+				<key>cleardebuggertext</key>
+				<false/>
+				<key>processoutputs</key>
+				<true/>
+			</dict>
+			<key>type</key>
+			<string>alfred.workflow.utility.debug</string>
+			<key>uid</key>
+			<string>C16C7117-4F88-4E46-BBB0-F0948EB00485</string>
+			<key>version</key>
+			<integer>1</integer>
+		</dict>
+	</array>
+	<key>readme</key>
+	<string>A simple Alfred workflow to search for Notion pages in your workspace. Currently in development, so expect breaking changes!
+
+# How to Use
+
+1. [Generate an integration key](https://www.notion.so/my-integrations/) for your workspace
+2. Install the workflow
+3. Enter your integration key when prompted. You may also optionally choose to open links in the Notion desktop client.
+4. Start searching for pages!</string>
+	<key>uidata</key>
+	<dict>
+		<key>6E3ABA97-D3A0-4E3A-B1B3-766B3E57E289</key>
+		<dict>
+			<key>xpos</key>
+			<real>740</real>
+			<key>ypos</key>
+			<real>185</real>
+		</dict>
+		<key>95C59501-B35E-4FE9-962E-B322BA93EF37</key>
+		<dict>
+			<key>xpos</key>
+			<real>550</real>
+			<key>ypos</key>
+			<real>245</real>
+		</dict>
+		<key>AC29A547-802D-4793-BB40-D4685D63AC26</key>
+		<dict>
+			<key>xpos</key>
+			<real>740</real>
+			<key>ypos</key>
+			<real>330</real>
+		</dict>
+		<key>C16C7117-4F88-4E46-BBB0-F0948EB00485</key>
+		<dict>
+			<key>xpos</key>
+			<real>375</real>
+			<key>ypos</key>
+			<real>495</real>
+		</dict>
+		<key>C3ACA64C-07DB-4674-B00E-2C045633F20C</key>
+		<dict>
+			<key>xpos</key>
+			<real>380</real>
+			<key>ypos</key>
+			<real>255</real>
+		</dict>
+		<key>CC621B5E-7405-4747-8FAA-FE2A58F0A98C</key>
+		<dict>
+			<key>xpos</key>
+			<real>165</real>
+			<key>ypos</key>
+			<real>225</real>
+		</dict>
+		<key>E2311F96-B8CD-44A8-B863-98B20E2DE399</key>
+		<dict>
+			<key>xpos</key>
+			<real>375</real>
+			<key>ypos</key>
+			<real>360</real>
+		</dict>
+	</dict>
+	<key>userconfigurationconfig</key>
+	<array>
+		<dict>
+			<key>config</key>
+			<dict>
+				<key>default</key>
+				<string>ns</string>
+				<key>placeholder</key>
+				<string>Enter a keyword...</string>
+				<key>required</key>
+				<true/>
+				<key>trim</key>
+				<true/>
+			</dict>
+			<key>description</key>
+			<string>Set the search keyword used for the workflow. Defaults to "ns".</string>
+			<key>label</key>
+			<string>Search keyword</string>
+			<key>type</key>
+			<string>textfield</string>
+			<key>variable</key>
+			<string>keyword</string>
+		</dict>
+		<dict>
+			<key>config</key>
+			<dict>
+				<key>default</key>
+				<string></string>
+				<key>placeholder</key>
+				<string></string>
+				<key>required</key>
+				<true/>
+				<key>trim</key>
+				<true/>
+			</dict>
+			<key>description</key>
+			<string>Notion integration token used to access pages in your workspace. To generate a new token, visit https://www.notion.so/my-integrations/</string>
+			<key>label</key>
+			<string>Notion integration token</string>
+			<key>type</key>
+			<string>textfield</string>
+			<key>variable</key>
+			<string>notionApiToken</string>
+		</dict>
+		<dict>
+			<key>config</key>
+			<dict>
+				<key>default</key>
+				<false/>
+				<key>required</key>
+				<false/>
+				<key>text</key>
+				<string>Open in desktop app</string>
+			</dict>
+			<key>description</key>
+			<string>Open pages in the desktop app, instead of the web app.</string>
+			<key>label</key>
+			<string>Open in desktop app</string>
+			<key>type</key>
+			<string>checkbox</string>
+			<key>variable</key>
+			<string>openInDesktop</string>
+		</dict>
+	</array>
+	<key>version</key>
+	<string>0.2.0</string>
+	<key>webaddress</key>
+	<string></string>
+</dict>
+</plist>
