@@ -358,7 +358,7 @@ exit(0)</string>
 	<key>readme</key>
 	<string># notion-search-for-alfred
 
-An Alfred 5 workflow to search for Notion pages in your workspace.
+An Alfred 5 workflow to search for Notion pages.
 
 # How to Use
 
@@ -367,7 +367,7 @@ An Alfred 5 workflow to search for Notion pages in your workspace.
 3. Grant the integration access to pages that you want to appear in search. See [this help document](https://www.notion.so/help/add-and-manage-connections-with-the-api#add-connections-to-pages) for more information.
 4. Download and install the workflow.
 5. Paste your integration key when prompted.
-6. Start searching for pages by typing `ns [search query]`. Select a search result to open it, or use `⌘+select` to copy the page link.</string>
+6. Search for pages by typing `ns [search query]`. Select a search result to open it, or use `⌘+select` to copy the page link.</string>
 	<key>uidata</key>
 	<dict>
 		<key>6E3ABA97-D3A0-4E3A-B1B3-766B3E57E289</key>
@@ -484,8 +484,6 @@ An Alfred 5 workflow to search for Notion pages in your workspace.
 			<string>openInDesktop</string>
 		</dict>
 	</array>
-	<key>variablesdontexport</key>
-	<array/>
 	<key>version</key>
 	<string>1.0.0</string>
 	<key>webaddress</key>
