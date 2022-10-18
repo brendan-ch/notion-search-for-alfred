@@ -1,20 +1,22 @@
-An Alfred workflow to search for Notion pages in your workspace.
+# notion-search-for-alfred
+
+An Alfred 5 workflow to search for Notion pages in your workspace.
 
 # How to Use
 
-1. [Generate an integration key](https://www.notion.so/my-integrations/) for your workspace. [See instructions on configuration options below](#generating-an-integration-key).
-2. Grant the workflow access to pages ([see section below](#granting-access-to-pages)).
-3. Download and install the workflow.
-4. Enter your integration key when prompted. You may also optionally choose to open links in the Notion desktop client.
-5. Start searching for pages by typing `ns [search query]`. Select a search result to open it, or `⌘+select` to copy the page link.
+1. [Generate an integration key](https://www.notion.so/my-integrations/) for your workspace. [See instructions on configuration below](#generating-an-integration-key).
+2. Copy the internal integration key.
+3. Grant the integration access to pages that you want to appear in search. See [Notion's help center](https://www.notion.so/help/add-and-manage-connections-with-the-api#add-connections-to-pages) for more information.
+4. Download the workflow, and double-click to install.
+5. Paste your integration key when prompted. You may also optionally choose to open links in the Notion desktop client.
+6. Start searching for pages by typing `ns [search query]`. Select a search result to open it, or use `⌘+select` to copy the page link.
 
 # Generating an Integration Key
 
 When creating a new integration, configure the capabilities section as follows:
 
-![Configuration options for the Notion integration setup.](assets/notion-integration-screenshot.png)
+<img width="1019" alt="Name and integration type (internal integration)" src="https://user-images.githubusercontent.com/34608561/196333666-f1842090-e794-4cb4-8bcf-f892b41516af.png">
 
+<img width="1019" alt="Integration permissions (read only, no user information)" src="https://user-images.githubusercontent.com/34608561/196333693-ca336de1-27fc-497b-8945-c626e7c433ac.png">
 
-# Granting Access to Pages
-
-Because this workflow uses the official Notion API, you must grant the workflow access to pages that you want to appear in search results.
+Once configured, press Submit to create your integration.
