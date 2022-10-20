@@ -2,8 +2,7 @@
 
 An Alfred 5 workflow to search for Notion pages.
 
-<img width="1019" alt="Screenshot with Notion workflow." src="https://user-images.githubusercontent.com/34608561/196828926-3378e00b-50c8-4a97-bb23-16b5b397ac50.png">
-
+<img width="100%" alt="Screen Shot 2022-10-19 at 6 02 55 PM Large" src="https://user-images.githubusercontent.com/34608561/196832212-7e4eedb0-a748-466a-8de2-af46ea3b0ef2.png">
 
 # How to Use
 
