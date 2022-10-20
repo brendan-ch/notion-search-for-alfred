@@ -2,6 +2,9 @@
 
 An Alfred 5 workflow to search for Notion pages.
 
+<img width="1019" alt="Screenshot with Notion workflow." src="https://user-images.githubusercontent.com/34608561/196828926-3378e00b-50c8-4a97-bb23-16b5b397ac50.png">
+
+
 # How to Use
 
 1. [Generate an integration key](https://www.notion.so/my-integrations/) for your workspace. [See instructions on configuration below](#generating-an-integration-key).
