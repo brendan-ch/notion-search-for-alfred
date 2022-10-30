@@ -143,6 +143,7 @@
 import sys
 import http.client
 import os
+import difflib
 
 def parse_rich_text(objects: "list") -&gt; str:
   """Returns an array of rich text objects as plain text."""
@@ -155,7 +156,7 @@ def parse_rich_text(objects: "list") -&gt; str:
 
 # Notion API parameters
 NOTION_VERSION = '2022-06-28'
-PAGE_SIZE = 10;
+PAGE_SIZE = 50;
 
 # Get bearer token and query
 token = os.getenv('notionApiToken')
@@ -218,6 +219,17 @@ for item in response_json['results']:
     'subtitle': item['url']
   }
   alfred_json.append(result)
+
+
+# Notion API doesn't always return desired result, so filter and sort manually
+# First, filter to title matches
+query_lower = query.lower()
+alfred_json = list(filter(lambda item: query_lower in item['title'].lower(), alfred_json))
+
+# Compare string similarity using SequenceMatcher
+matcher = lambda item: difflib.SequenceMatcher(None, item['title'].lower(), query_lower).ratio()
+# Sort by similarity ratios
+alfred_json = sorted(alfred_json, key=matcher, reverse=True)
 
 json = json.dumps({
   'items': alfred_json
